@@ -1,18 +1,12 @@
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import get_user_model
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import get_user_model
 
 
 class UserCreateForm(UserCreationForm):
     class Meta:
         model = get_user_model()
-        fields = ['username', 'first_name', 'last_name', 'email']
+        fields = ('username', 'email', 'last_name',
+                  'first_name', 'password1', 'password2')
 
 
-class LoginForm(forms.ModelForm):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput())
-
-    class Meta:
-        model = get_user_model()
-        fields = ['username', 'password']

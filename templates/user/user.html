@@ -7,11 +7,12 @@
     <title>Document</title>
 </head>
 <body>
-    <a href="{% url 'user:signup' %}">회원가입</a>
     {% if request.user.is_authenticated %}
+        <h1>Hello {{request.user.username}} </h1>
         <a href="{% url 'user:logout' %}">로그아웃</a>
     {% else %}
         <a href="{% url 'user:login' %}">로그인</a>
+        <a href="{% url 'user:signup' %}">회원가입</a>
     {% endif %}    
 </body>
 </html>

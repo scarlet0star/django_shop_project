@@ -16,7 +16,7 @@ class Product(models.Model):
     size = models.CharField(choices=sizes, max_length=1)
 
     def __str__(self):
-        return f'{self.name}-{self.code}'
+        return f'{self.code}'
 
     def save(self, *args, **kwargs):
         max_code = Product.objects.filter(name=self.name).aggregate(
@@ -31,12 +31,12 @@ class Product(models.Model):
         self.code = f'{self.name.lower()}-{str(new_code).zfill(3)}'
 
         super(Product, self).save(*args, **kwargs)
-        Inbound.objects.create(product=self,qunatity=0)
+        Inventory.objects.create(product=self, quantity=0, price=self.price)
 
 
 class Inbound(models.Model):
     product = models.ForeignKey("Product", on_delete=models.CASCADE)
-    qunatity = models.PositiveBigIntegerField()
+    quantity = models.PositiveBigIntegerField()
     date = models.DateField(auto_now_add=True)
     price = models.PositiveBigIntegerField()
 
@@ -47,7 +47,7 @@ class Inbound(models.Model):
 
 class Outbound(models.Model):
     product = models.ForeignKey("Product", on_delete=models.CASCADE)
-    qunatity = models.PositiveBigIntegerField()
+    quantity = models.PositiveBigIntegerField()
     date = models.DateField(auto_now_add=True)
     price = models.PositiveBigIntegerField()
 
@@ -58,16 +58,8 @@ class Outbound(models.Model):
 
 class Inventory(models.Model):
     product = models.ForeignKey("Product", on_delete=models.CASCADE)
-    qunatity = models.PositiveBigIntegerField()
+    quantity = models.PositiveBigIntegerField()
     price = models.PositiveBigIntegerField()
 
-    def calculate_stock(self):
-        inbound_qty = sum(self.product.inbound_set.all(
-        ).values_list('quantity', flat=True))
-        outbound_qty = sum(
-            self.product.outbound_set.all().values_list('quantity', flat=True))
-        self.quantity = inbound_qty - outbound_qty
-        self.save()
-
     def __str__(self):
-        return f'{self.product.name} - {self.quantity}'
+        return f'{self.product.code} : {self.quantity}'
