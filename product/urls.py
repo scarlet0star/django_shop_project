@@ -11,4 +11,5 @@ urlpatterns = [
     path("outbound/", outbound_list, name='outbounds'),
     path("outbound/create", outbound_create, name='outbound_create'),
     path("inventory/", inventory, name='inventory'),
+    path("inventory/create", inventory_create, name='inventory_create'),
 ]

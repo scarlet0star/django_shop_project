@@ -7,13 +7,13 @@
     <title>Document</title>
 </head>
 <body>
-    {% if products%}
+    {% if outbounds %}
     <ul>
-    {% for product in products%}
-    <li>{{product.code}} {{product.price}} {{product.size}} {{product.description}}</li>
+    {% for outbound in outbounds%}
+    <li>{{outbound.product}} / 출고된 재고: {{outbound.quantity}} / {{outbound.date}} </li>
     </ul>
     {% endfor %}
     {% endif %}
-    <a href="{% url 'product:product_create'%}">물품 생성</a>
+    <a href="{% url 'product:outbound_create'%}">재고 출고 작성</a>
 </body>
 </html>
