@@ -57,18 +57,11 @@ def outbound_create(request):
             product = form.cleaned_data['product']
             quantity = form.cleaned_data['quantity']
 
-            inbound_qs = Inbound.objects.filter(product=product)
-            inbound_total = sum([inbound.quantity for inbound in inbound_qs])
+            now_qs = Inventory.objects.get(product=product).quantity
 
-            outbound_qs = Outbound.objects.filter(product=product)
-            outbound_total = sum(
-                [outbound.quantity for outbound in outbound_qs])
-
-            available_quantity = inbound_total - outbound_total
-
-            if quantity > available_quantity:
+            if now_qs - quantity < 0:
                 messages.error(
-                    request, f"선택한 제품의 가능한 최대 수량은 {available_quantity}개 입니다.")
+                    request, f"선택한 제품의 가능한 최대 수량은 {now_qs}개 입니다.")
                 return redirect('product:outbound_create')
             else:
                 form.save()
